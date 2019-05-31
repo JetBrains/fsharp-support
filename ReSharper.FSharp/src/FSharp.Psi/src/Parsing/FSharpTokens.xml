@@ -99,7 +99,7 @@
         <Token name="RQUOTE_UNTYPED" representation="@@>" />
         <Token name="LQUOTE_TYPED" representation="&lt;@" />
         <Token name="RQUOTE_TYPED" representation="@>" />
-        
+
         <Token name="AMP" representation="&amp;" />
         <Token name="AMP_AMP" representation="&amp;&amp;" />
         <Token name="BAR" representation="|" />
@@ -154,6 +154,23 @@
         <Token name="IDENTIFIER" />
         <Token name="SYMBOLIC_OP" />
         <Token name="BAD_SYMBOLIC_OP" />
+        <Token name="INFIX_STAR_STAR_OP" />
+        <Token name="BAD_INFIX_STAR_STAR_OP" />
+        <Token name="INFIX_STAR_DIV_MOD_OP" />
+        <Token name="BAD_INFIX_STAR_DIV_MOD_OP" />
+        <Token name="PLUS_MINUS_OP" />
+        <Token name="BAD_PLUS_MINUS_OP" />
+        <Token name="INFIX_AT_HAT_OP" />
+        <Token name="BAD_INFIX_AT_HAT_OP" />
+        <Token name="INFIX_COMPARE_OP" />
+        <Token name="BAD_INFIX_COMPARE_OP" />
+        <Token name="INFIX_AMP_OP" />
+        <Token name="BAD_INFIX_AMP_OP" />
+        <Token name="INFIX_BAR_OP" />
+        <Token name="BAD_INFIX_BAR_OP" />
+        <Token name="PREFIX_OP" />
+        <Token name="BAD_PREFIX_OP" />
+        <Token name="FUNKY_OPERATOR_NAME" />
         <Token name="SHEBANG" />
         <Token name="HASH" />
         <Token name="TEXT" />
@@ -178,7 +195,7 @@
         <Token name="UNFINISHED_STRING_IN_COMMENT" />
         <Token name="UNFINISHED_VERBATIM_STRING_IN_COMMENT" />
         <Token name="UNFINISHED_TRIPLE_QUOTED_STRING_IN_COMMENT" />
-        
+
         <Token name="CHARACTER_LITERAL" />
         <Token name="STRING" />
         <Token name="VERBATIM_STRING" />
@@ -186,7 +203,7 @@
         <Token name="BYTEARRAY" />
         <Token name="VERBATIM_BYTEARRAY" />
         <Token name="BYTECHAR" />
-        
+
         <Token name="UNFINISHED_STRING" />
         <Token name="UNFINISHED_VERBATIM_STRING" />
         <Token name="UNFINISHED_TRIPLE_QUOTED_STRING" />

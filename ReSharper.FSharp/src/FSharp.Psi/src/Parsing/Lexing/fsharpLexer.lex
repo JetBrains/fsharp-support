@@ -1,5 +1,4 @@
 using System.Collections;
-using JetBrains.Diagnostics;
 using JetBrains.Util;
 using JetBrains.Text;
 using JetBrains.ReSharper.Psi;
@@ -163,6 +162,8 @@ RESERVED_SYMBOLIC_SEQUENCE=[~`]
 
 OP_CHAR=([!%&*+\-./<=>@^|~\?])
 BAD_OP_CHAR=({OP_CHAR}|([$:]))
+IGNORED_OP_CHAR=([.\?])
+BAD_IGNORED_OP_CHAR=([.$\?])
 LQUOTE_TYPED="<@"
 RQUOTE_TYPED="@>"
 LQUOTE_UNTYPED="<@@"
@@ -171,6 +172,24 @@ QUOTE_OP_RIGHT=({RQUOTE_TYPED}|{RQUOTE_UNTYPED})
 QUOTE_OP_LEFT=({LQUOTE_TYPED}|{LQUOTE_UNTYPED})
 SYMBOLIC_OP=(([\?])|("?<-")|(({OP_CHAR})+)|{QUOTE_OP_LEFT}|{QUOTE_OP_RIGHT})
 BAD_SYMBOLIC_OP=(([\?])|("?<-")|(({BAD_OP_CHAR})+)|{QUOTE_OP_LEFT}|{QUOTE_OP_RIGHT})
+
+INFIX_STAR_STAR_OP=(({IGNORED_OP_CHAR})*("**")({OP_CHAR})*)
+BAD_INFIX_STAR_STAR_OP=(({BAD_IGNORED_OP_CHAR})*("**")({BAD_OP_CHAR})*)
+INFIX_STAR_DIV_MOD_OP=(({IGNORED_OP_CHAR})*([*/%])({OP_CHAR})*)
+BAD_INFIX_STAR_DIV_MOD_OP=(({BAD_IGNORED_OP_CHAR})*([*/%])({BAD_OP_CHAR})*)
+PLUS_MINUS_OP=(({IGNORED_OP_CHAR})*([+\-])({OP_CHAR})*)
+BAD_PLUS_MINUS_OP=(({BAD_IGNORED_OP_CHAR})*([+\-])({BAD_OP_CHAR})*)
+INFIX_AT_HAT_OP=(({IGNORED_OP_CHAR})*([@^])({OP_CHAR})*)
+BAD_INFIX_AT_HAT_OP=(({BAD_IGNORED_OP_CHAR})*([@^])({BAD_OP_CHAR})*)
+INFIX_COMPARE_OP=(({IGNORED_OP_CHAR})*(([=<>]|("!=")))({OP_CHAR})*)
+BAD_INFIX_COMPARE_OP=(({BAD_IGNORED_OP_CHAR})*(([=<>]|("!=")))({BAD_OP_CHAR})*)
+INFIX_AMP_OP=(({IGNORED_OP_CHAR})*("&")({OP_CHAR})*)
+BAD_INFIX_AMP_OP=(({BAD_IGNORED_OP_CHAR})*("&")({BAD_OP_CHAR})*)
+INFIX_BAR_OP=(({IGNORED_OP_CHAR})*("|")({OP_CHAR})*)
+BAD_INFIX_BAR_OP=(({BAD_IGNORED_OP_CHAR})*("|")({BAD_OP_CHAR})*)
+PREFIX_OP=(({IGNORED_OP_CHAR})*("|")({OP_CHAR})*)
+BAD_PREFIX_OP=(({BAD_IGNORED_OP_CHAR})*([!~])({BAD_OP_CHAR})*)
+FUNKY_OPERATOR_NAME=(".[]"|".[]<-"|".[,]<-"|".[,,]<-"|".[,,,]<-"|".[,,,]"|".[,,]"|".[,]"|".[..]"|".[..,..]"|".[..,..,..]"|".[..,..,..,..]"|".()"|".()<-")
 
 LESS_OP=(("</")|{LESS})
 
@@ -235,9 +254,9 @@ PP_CONDITIONAL_SYMBOL={IDENT}
 <INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "const"    { return initIdent(); }
 <INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "true"     { return initIdent(); }
 <INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "false"    { return initIdent(); }
-<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "^"        { return makeToken(SYMBOLIC_OP); }
-<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "^-"       { return makeToken(SYMBOLIC_OP); }
-<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "/"        { return makeToken(SYMBOLIC_OP); }
+<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "^"        { return makeToken(INFIX_AT_HAT_OP); }
+<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "^-"       { return makeToken(INFIX_AT_HAT_OP); }
+<INIT_ADJACENT_TYAPP, ADJACENT_TYAPP> "/"        { return makeToken(INFIX_STAR_DIV_MOD_OP); }
 
 <INIT_ADJACENT_TYAPP> {IDENT} { return identInInitTypeApp(); }
 <ADJACENT_TYAPP> {IDENT}      { return identInTypeApp(); }
@@ -295,8 +314,27 @@ PP_CONDITIONAL_SYMBOL={IDENT}
 <SYMBOLIC_OPERATOR> {UNDERSCORE}          { riseFromParenLevel(0); return makeToken(UNDERSCORE); }
 <SYMBOLIC_OPERATOR> {MINUS}               { riseFromParenLevel(0); return makeToken(MINUS); }
 <SYMBOLIC_OPERATOR> {COMMA}               { riseFromParenLevel(0); return makeToken(COMMA); }
-<SYMBOLIC_OPERATOR> {SYMBOLIC_OP}         { riseFromParenLevel(0); return makeToken(SYMBOLIC_OP); }
-<SYMBOLIC_OPERATOR> {BAD_SYMBOLIC_OP}     { riseFromParenLevel(0); return makeToken(BAD_SYMBOLIC_OP); }
+
+<SYMBOLIC_OPERATOR> {INFIX_STAR_STAR_OP}    { riseFromParenLevel(0); return makeToken(INFIX_STAR_STAR_OP); }
+<SYMBOLIC_OPERATOR> {INFIX_STAR_DIV_MOD_OP} { riseFromParenLevel(0); return makeToken(INFIX_STAR_DIV_MOD_OP); }
+<SYMBOLIC_OPERATOR> {PLUS_MINUS_OP}         { riseFromParenLevel(0); return makeToken(PLUS_MINUS_OP); }
+<SYMBOLIC_OPERATOR> {INFIX_AT_HAT_OP}       { riseFromParenLevel(0); return makeToken(INFIX_AT_HAT_OP); }
+<SYMBOLIC_OPERATOR> {INFIX_COMPARE_OP}      { riseFromParenLevel(0); return makeToken(INFIX_COMPARE_OP); }
+<SYMBOLIC_OPERATOR> {INFIX_AMP_OP}          { riseFromParenLevel(0); return makeToken(INFIX_AMP_OP); }
+<SYMBOLIC_OPERATOR> {INFIX_BAR_OP}          { riseFromParenLevel(0); return makeToken(INFIX_BAR_OP); }
+<SYMBOLIC_OPERATOR> {PREFIX_OP}             { riseFromParenLevel(0); return makeToken(PREFIX_OP); }
+<SYMBOLIC_OPERATOR> {FUNKY_OPERATOR_NAME}   { riseFromParenLevel(0); return makeToken(PREFIX_OP); }
+<SYMBOLIC_OPERATOR> {SYMBOLIC_OP}           { riseFromParenLevel(0); return makeToken(SYMBOLIC_OP); }
+
+<SYMBOLIC_OPERATOR> {BAD_INFIX_STAR_STAR_OP}    { riseFromParenLevel(0); return makeToken(BAD_INFIX_STAR_STAR_OP); }
+<SYMBOLIC_OPERATOR> {BAD_INFIX_STAR_DIV_MOD_OP} { riseFromParenLevel(0); return makeToken(BAD_INFIX_STAR_DIV_MOD_OP); }
+<SYMBOLIC_OPERATOR> {BAD_PLUS_MINUS_OP}         { riseFromParenLevel(0); return makeToken(BAD_PLUS_MINUS_OP); }
+<SYMBOLIC_OPERATOR> {BAD_INFIX_AT_HAT_OP}       { riseFromParenLevel(0); return makeToken(BAD_INFIX_AT_HAT_OP); }
+<SYMBOLIC_OPERATOR> {BAD_INFIX_COMPARE_OP}      { riseFromParenLevel(0); return makeToken(BAD_INFIX_COMPARE_OP); }
+<SYMBOLIC_OPERATOR> {BAD_INFIX_AMP_OP}          { riseFromParenLevel(0); return makeToken(BAD_INFIX_AMP_OP); }
+<SYMBOLIC_OPERATOR> {BAD_INFIX_BAR_OP}          { riseFromParenLevel(0); return makeToken(BAD_INFIX_BAR_OP); }
+<SYMBOLIC_OPERATOR> {BAD_PREFIX_OP}             { riseFromParenLevel(0); return makeToken(BAD_PREFIX_OP); }
+<SYMBOLIC_OPERATOR> {BAD_SYMBOLIC_OP}           { riseFromParenLevel(0); return makeToken(BAD_SYMBOLIC_OP); }
 
 <LINE, ADJACENT_TYAPP, INIT_ADJACENT_TYAPP> {TAB}        { return makeToken(BAD_TAB); }
 <LINE, ADJACENT_TYAPP, INIT_ADJACENT_TYAPP> {WHITESPACE} { return makeToken(WHITESPACE); }
@@ -509,12 +547,48 @@ PP_CONDITIONAL_SYMBOL={IDENT}
 
 <LINE, ADJACENT_TYAPP> {RESERVED_SYMBOLIC_SEQUENCE} { return makeToken(RESERVED_SYMBOLIC_SEQUENCE); }
 <LINE, ADJACENT_TYAPP> {RESERVED_LITERAL_FORMATS}   { return makeToken(RESERVED_LITERAL_FORMATS); }
+<LINE, ADJACENT_TYAPP> {INFIX_STAR_STAR_OP}         { return makeToken(INFIX_STAR_STAR_OP); }
+<LINE, ADJACENT_TYAPP> {INFIX_STAR_DIV_MOD_OP}      { return makeToken(INFIX_STAR_DIV_MOD_OP); }
+<LINE, ADJACENT_TYAPP> {PLUS_MINUS_OP}              { return makeToken(PLUS_MINUS_OP); }
+<LINE, ADJACENT_TYAPP> {INFIX_AT_HAT_OP}            { return makeToken(INFIX_AT_HAT_OP); }
+<LINE, ADJACENT_TYAPP> {INFIX_COMPARE_OP}           { return makeToken(INFIX_COMPARE_OP); }
+<LINE, ADJACENT_TYAPP> {INFIX_AMP_OP}               { return makeToken(INFIX_AMP_OP); }
+<LINE, ADJACENT_TYAPP> {INFIX_BAR_OP}               { return makeToken(INFIX_BAR_OP); }
+<LINE, ADJACENT_TYAPP> {PREFIX_OP}                  { return makeToken(PREFIX_OP); }
+<LINE, ADJACENT_TYAPP> {FUNKY_OPERATOR_NAME}        { return makeToken(PREFIX_OP); }
 <LINE, ADJACENT_TYAPP> {SYMBOLIC_OP}                { return makeToken(SYMBOLIC_OP); }
+
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_STAR_STAR_OP}     { return makeToken(BAD_INFIX_STAR_STAR_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_STAR_DIV_MOD_OP}  { return makeToken(BAD_INFIX_STAR_DIV_MOD_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_PLUS_MINUS_OP}          { return makeToken(BAD_PLUS_MINUS_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_AT_HAT_OP}        { return makeToken(BAD_INFIX_AT_HAT_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_COMPARE_OP}       { return makeToken(BAD_INFIX_COMPARE_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_AMP_OP}           { return makeToken(BAD_INFIX_AMP_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_INFIX_BAR_OP}           { return makeToken(BAD_INFIX_BAR_OP); }
+<LINE, ADJACENT_TYAPP> {BAD_PREFIX_OP}              { return makeToken(BAD_PREFIX_OP); }
 <LINE, ADJACENT_TYAPP> {BAD_SYMBOLIC_OP}            { return makeToken(BAD_SYMBOLIC_OP); }
 
 <INIT_ADJACENT_TYAPP> {RESERVED_SYMBOLIC_SEQUENCE} { yybegin(LINE); return makeToken(RESERVED_SYMBOLIC_SEQUENCE); }
 <INIT_ADJACENT_TYAPP> {RESERVED_LITERAL_FORMATS}   { yybegin(LINE); return makeToken(RESERVED_LITERAL_FORMATS); }
+<INIT_ADJACENT_TYAPP> {INFIX_STAR_STAR_OP}         { yybegin(LINE); return makeToken(INFIX_STAR_STAR_OP); }
+<INIT_ADJACENT_TYAPP> {INFIX_STAR_DIV_MOD_OP}      { yybegin(LINE); return makeToken(INFIX_STAR_DIV_MOD_OP); }
+<INIT_ADJACENT_TYAPP> {PLUS_MINUS_OP}              { yybegin(LINE); return makeToken(PLUS_MINUS_OP); }
+<INIT_ADJACENT_TYAPP> {INFIX_AT_HAT_OP}            { yybegin(LINE); return makeToken(INFIX_AT_HAT_OP); }
+<INIT_ADJACENT_TYAPP> {INFIX_COMPARE_OP}           { yybegin(LINE); return makeToken(INFIX_COMPARE_OP); }
+<INIT_ADJACENT_TYAPP> {INFIX_AMP_OP}               { yybegin(LINE); return makeToken(INFIX_AMP_OP); }
+<INIT_ADJACENT_TYAPP> {INFIX_BAR_OP}               { yybegin(LINE); return makeToken(INFIX_BAR_OP); }
+<INIT_ADJACENT_TYAPP> {PREFIX_OP}                  { yybegin(LINE); return makeToken(PREFIX_OP); }
+<INIT_ADJACENT_TYAPP> {FUNKY_OPERATOR_NAME}        { yybegin(LINE); return makeToken(PREFIX_OP); }
 <INIT_ADJACENT_TYAPP> {SYMBOLIC_OP}                { yybegin(LINE); return makeToken(SYMBOLIC_OP); }
+
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_STAR_STAR_OP}     { yybegin(LINE); return makeToken(BAD_INFIX_STAR_STAR_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_STAR_DIV_MOD_OP}  { yybegin(LINE); return makeToken(BAD_INFIX_STAR_DIV_MOD_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_PLUS_MINUS_OP}          { yybegin(LINE); return makeToken(BAD_PLUS_MINUS_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_AT_HAT_OP}        { yybegin(LINE); return makeToken(BAD_INFIX_AT_HAT_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_COMPARE_OP}       { yybegin(LINE); return makeToken(BAD_INFIX_COMPARE_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_AMP_OP}           { yybegin(LINE); return makeToken(BAD_INFIX_AMP_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_INFIX_BAR_OP}           { yybegin(LINE); return makeToken(BAD_INFIX_BAR_OP); }
+<INIT_ADJACENT_TYAPP> {BAD_PREFIX_OP}              { yybegin(LINE); return makeToken(BAD_PREFIX_OP); }
 <INIT_ADJACENT_TYAPP> {BAD_SYMBOLIC_OP}            { yybegin(LINE); return makeToken(BAD_SYMBOLIC_OP); }
 
 <SMASH_INT_DOT_DOT, SMASH_INT_DOT_DOT_FROM_LINE> {INT} { return makeToken(INT32); }
@@ -541,7 +615,7 @@ PP_CONDITIONAL_SYMBOL={IDENT}
 <IN_BLOCK_COMMENT, IN_BLOCK_COMMENT_FROM_LINE> <<EOF>>   { return fillBlockComment(UNFINISHED_BLOCK_COMMENT); }
 
 <SMASH_ADJACENT_LESS_OP> {LESS} { return makeToken(LESS); }
-<SMASH_ADJACENT_LESS_OP> "/"    { riseFromParenLevel(0); return makeToken(SYMBOLIC_OP); }
+<SMASH_ADJACENT_LESS_OP> "/"    { riseFromParenLevel(0); return makeToken(INFIX_STAR_DIV_MOD_OP); }
 
 <SMASH_ADJACENT_GREATER_BAR_RBRACK, SMASH_ADJACENT_GREATER_BAR_RBRACK_FIN> {GREATER}    { return makeToken(GREATER); }
 <SMASH_ADJACENT_GREATER_BAR_RBRACK, SMASH_ADJACENT_GREATER_BAR_RBRACK_FIN> {BAR_RBRACK} { exitSmash(SMASH_ADJACENT_GREATER_BAR_RBRACK_FIN); return makeToken(BAR_RBRACK); }
