@@ -111,6 +111,10 @@
     <Compile Include="src\Intentions\NegateConditionActions.fs" />
     <Compile Include="src\Intentions\ToMutableAction.fs" />
     <Compile Include="src\Intentions\ToLiteralAction.fs" />
+    <Compile Include="src\Injected\FSharpLiteralInjectionTarget.fs" />
+    <Compile Include="src\Injected\FSharpInjectionProvider.fs" />
+    <Compile Include="src\Injected\FSharpRegexNodeProvider.fs" />
+    <Compile Include="src\Injected\RegExpPsiProvider.fs" />
     <ErrorsGen Include="src\Daemon\Highlightings\CommonErrors.xml">
       <Mode>QUICKFIX</Mode>
       <Namespace>JetBrains.ReSharper.Plugins.FSharp.Psi.Features.Daemon.QuickFixes</Namespace>

@@ -7,5 +7,6 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Psi
   {
     IParameter GetMatchingParameter(IFSharpExpression fsExpr);
     IParameter GetNamedArg(IFSharpExpression fsExpr);
+    IFSharpArgumentsOwner GetArgumentsOwner(IFSharpExpression expr);
   }
 }

@@ -68,8 +68,14 @@ let languagePrimitivesModuleTypeName = clrTypeName "Microsoft.FSharp.Core.Langua
 [<CompiledName("IntrinsicTypeName")>]
 let intrinsicOperatorsTypeName = clrTypeName "Microsoft.FSharp.Core.LanguagePrimitives+IntrinsicOperators"
 
+[<CompiledName("RegexTypeName")>]
+let regexTypeName = clrTypeName "System.Text.RegularExpressions.Regex"
+
+[<CompiledName("RegexOptionsTypeName")>]
+let regexOptionsTypeName = clrTypeName "System.Text.RegularExpressions.RegexOptions"
+
 let predefinedFunctionTypes =
-    [| operatorsModuleTypeName, [| "not"; "|>"; "<|"; "<>"; "=" |]
+    [| operatorsModuleTypeName, [| "not"; "|>"; "<|"; "<>"; "="; "&&&"; "|||"; "^^^" |]
        intrinsicOperatorsTypeName, [| "||"; "&&" |] |]
     |> Array.collect (fun (typeName, names) -> [| for name in names -> name, typeName |])
     |> dict
