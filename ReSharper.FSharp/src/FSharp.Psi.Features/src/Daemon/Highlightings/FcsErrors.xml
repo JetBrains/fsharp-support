@@ -40,6 +40,7 @@
     <Range>expr.Expression.GetHighlightingRange()</Range>
     <Behavour overlapResolvePolicy="NONE"/>
     <QuickFix>AddMatchAllClauseFix</QuickFix>
+    <QuickFix>AddDiscriminatedUnionAllClauses</QuickFix>
   </Warning>
 
   <Warning staticGroup="FSharpErrors" name="EnumMatchIncomplete">

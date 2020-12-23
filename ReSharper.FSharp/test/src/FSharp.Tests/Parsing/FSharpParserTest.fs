@@ -164,6 +164,8 @@ type FSharpParserTest() =
     [<Test>] member x.``Expr - Match 02 - Simple pat``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Match 03 - When Expr``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Match 04 - Multiple When clauses``() = x.DoNamedTest()
+    [<Test>] member x.``Expr - Match 05 - Caseless``() = x.DoNamedTest()
+    [<Test>] member x.``Expr - Match 06 - Caseless in context``() = x.DoNamedTest()
 
     [<Test>] member x.``Expr - Do 01``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Do 02``() = x.DoNamedTest()

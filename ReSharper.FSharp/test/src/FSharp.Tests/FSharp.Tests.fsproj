@@ -82,6 +82,7 @@
     <Compile Include="QuickFixes\AddExtensionAttributeTest.fs" />
     <Compile Include="QuickFixes\RemoveRedundantParenExprTest.fs" />
     <Compile Include="QuickFixes\AddParensToApplicationTest.fs" />
+    <Compile Include="QuickFixes\AddDiscriminatedUnionAllClausesTest.fs" />
     <Compile Include="QuickFixes\NamespaceToModuleTest.fs" />
     <Compile Include="QuickFixes\SimplifyListConsPatTest.fs" />
     <Compile Include="QuickFixes\SimplifyLambdaTest.fs" />

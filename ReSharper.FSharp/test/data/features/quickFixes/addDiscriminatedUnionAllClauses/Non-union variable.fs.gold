@@ -1,0 +1,13 @@
+﻿module Say
+
+let someNonUnionVariable = 1
+// Only works for FSharp Unions
+match |someNonUnionVariable|(0) with
+||(1)||(2)
+------------------------------------------------
+0: Incomplete pattern matches on this expression.
+NO QUICKFIXES
+1: Incomplete structured construct at or before this point in expression
+NO QUICKFIXES
+2: Possible incorrect indentation: this token is offside of context started at position (5:1). Try indenting this token further or using standard formatting conventions.
+NO QUICKFIXES

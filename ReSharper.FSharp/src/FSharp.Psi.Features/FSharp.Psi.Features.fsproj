@@ -184,6 +184,7 @@
     <Compile Include="src\QuickFixes\AddExtensionAttributeFix.fs" />
     <Compile Include="src\QuickFixes\ReplaceWithInnerExpressionFixBase.fs" />
     <Compile Include="src\QuickFixes\RemoveRedundantParenExprFix.fs" />
+    <Compile Include="src\QuickFixes\AddDiscriminatedUnionAllClauses.fs" />
     <Compile Include="src\QuickFixes\NamespaceToModuleFix.fs" />
     <Compile Include="src\QuickFixes\SimplifyListConsPatFix.fs" />
     <Compile Include="src\QuickFixes\ReplaceAppExprWithArgFix.fs" />

@@ -36,6 +36,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Psi
 
     IMatchExpr CreateMatchExpr(IFSharpExpression expr);
     IMatchClause CreateMatchClause();
+    IMatchClause CreateMatchClause(string unionCase, bool hasFields);
 
     IForEachExpr CreateForEachExpr(IFSharpExpression expr);
 

@@ -747,6 +747,27 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Psi.Impl
       return fsPattern;
     }
     
+    public static IEnumerable<IFSharpPattern> GetInnerMatchStatementPatterns([CanBeNull] this IFSharpPattern fsPattern)
+    {
+      if (fsPattern == null) 
+        yield break;
+      
+      while (fsPattern is IParenPat parenPat && parenPat.Pattern != null)
+        fsPattern = parenPat.Pattern;
+
+      if (fsPattern is ITuplePat tuplePat)
+      {
+        foreach (var pattern in tuplePat.Patterns)
+        {
+          yield return pattern;
+        }
+      }
+      else
+      {
+        yield return fsPattern;
+      }
+    }
+    
     [NotNull]
     public static IFSharpReferenceOwner SetName([NotNull] this IFSharpReferenceOwner referenceOwner, 
       [NotNull] string name)

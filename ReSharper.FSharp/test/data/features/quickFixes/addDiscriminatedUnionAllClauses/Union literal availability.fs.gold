@@ -1,0 +1,17 @@
+﻿module Say
+
+type TestUnion =
+    | FieldlessCase
+    | CaseWithSingleField of int
+    | CaseWithMultipleFields of string * int
+
+// Not available on Union literal
+||match |TestUnion.FieldlessCase|(2) with|(0)|(1)
+------------------------------------------------
+0: Incomplete structured construct at or before this point in expression
+NO QUICKFIXES
+1: Possible incorrect indentation: this token is offside of context started at position (9:1). Try indenting this token further or using standard formatting conventions.
+NO QUICKFIXES
+2: Incomplete pattern matches on this expression.
+QUICKFIXES:
+Autogenerate all discriminated union cases

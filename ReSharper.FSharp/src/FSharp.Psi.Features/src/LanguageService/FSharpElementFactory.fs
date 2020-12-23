@@ -231,6 +231,13 @@ type FSharpElementFactory(languageService: IFSharpLanguageService, psiModule: IP
 
             let matchExpr = getExpression source :?> IMatchExpr
             matchExpr.Clauses.[0]
+            
+        member x.CreateMatchClause(unionCase, hasFields) =
+            let unionCaseFieldSource = if hasFields then "(_)" else ""
+            let source = sprintf "match () with | %s%s -> failwith \"todo\"" unionCase unionCaseFieldSource
+
+            let matchExpr = getExpression source :?> IMatchExpr
+            matchExpr.Clauses.[0]
 
         member x.CreateParenExpr() =
             getExpression "(())" :?> _
