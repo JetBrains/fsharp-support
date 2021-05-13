@@ -57,12 +57,13 @@ object RdFantomasModel : Root() {
     private val rdFormatArgs = basestruct {
         field("fileName", string)
         field("source", string)
-        field("formatConfig", rdFantomasFormatConfig)
+        field("formatConfig", array(string))
         field("parsingOptions", rdFcsParsingOptions)
         field("newLineText", string)
     }
 
     init {
+        call("getFormatConfigFields", void, array(string))
         call("formatDocument", structdef("rdFormatDocumentArgs") extends rdFormatArgs {}, string)
         call("formatSelection", structdef("rdFormatSelectionArgs") extends rdFormatArgs {
             field("range", rdFcsRange)
