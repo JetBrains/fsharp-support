@@ -26,5 +26,4 @@ type ReplaceUseWithLetFix(letNode: ILetBindings) =
                          sprintf "Expecting use, got: %O" (useKeyword.GetTokenType()))
 
         use writeLock = WriteLockCookie.Create(letNode.IsPhysical())
-        use disableFormatter = new DisableCodeFormatter()
         replaceWithToken useKeyword FSharpTokenType.LET

@@ -18,7 +18,6 @@ type RemoveRedundantBackticksFix(warning: RedundantBackticksWarning) =
 
     member x.ExecutePsiTransaction() =
         use writeCookie = WriteLockCookie.Create(identifier.IsPhysical())
-        use disableFormatter = new DisableCodeFormatter()
         let name = identifier.GetText().RemoveBackticks()
         let newId = FSharpIdentifierToken(name)
         replace identifier newId
