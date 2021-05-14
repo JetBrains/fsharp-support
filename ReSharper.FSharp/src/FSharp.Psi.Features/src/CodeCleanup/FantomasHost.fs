@@ -8,7 +8,7 @@ open JetBrains.Rd.Tasks
 open JetBrains.ReSharper.Plugins.FSharp.Fantomas.Client
 open JetBrains.ReSharper.Plugins.FSharp.Fantomas.Protocol
 
-module Reflection =
+module internal Reflection =
     let formatSettingType = typeof<FSharpFormatSettingsKey>
 
     let getFieldValue obj fieldName defaultValue =
@@ -34,20 +34,6 @@ type FantomasHost(solution: ISolution, fantomasFactory: FantomasProcessFactory) 
         RdFcsRange(range.FileName, range.StartLine, range.StartColumn, range.EndLine, range.EndColumn)
 
     let convertFormatSettings (settings: FSharpFormatSettingsKey) =
-(*
-        RdFantomasFormatConfig
-            (settings.INDENT_SIZE, settings.WRAP_LIMIT, settings.SpaceBeforeParameter,
-             settings.SpaceBeforeLowercaseInvocation, settings.SpaceBeforeUppercaseInvocation,
-             settings.SpaceBeforeClassConstructor, settings.SpaceBeforeMember, settings.SpaceBeforeColon,
-             settings.SpaceAfterComma, settings.SpaceBeforeSemicolon, settings.SpaceAfterSemicolon,
-             settings.IndentOnTryWith, settings.SpaceAroundDelimiter, settings.MaxIfThenElseShortWidth,
-             settings.MaxInfixOperatorExpression, settings.MaxRecordWidth, settings.MaxArrayOrListWidth,
-             settings.MaxValueBindingWidth, settings.MaxFunctionBindingWidth,
-             settings.MultilineBlockBracketsOnSameColumn, settings.NewlineBetweenTypeDefinitionAndMembers,
-             settings.KeepIfThenInSameLine, settings.MaxElmishWidth, settings.SingleArgumentWebMode,
-             settings.AlignFunctionSignatureToIndentation, settings.AlternativeLongMemberDefinitions,
-             settings.SemicolonAtEndOfLine)
-*)
         [| for field in formatConfigFields ->
             let fieldName =
                 match field with

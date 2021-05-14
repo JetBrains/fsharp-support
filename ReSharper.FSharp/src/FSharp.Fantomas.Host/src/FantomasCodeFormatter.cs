@@ -61,15 +61,15 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
     {
       var riderFormatConfigDict =
         FormatConfigPrimitiveFields
-          .Zip(riderFormatConfigValues, (field, valueData) =>
-            (field.Name,
-              Value: valueData == ""
+          .Zip(riderFormatConfigValues,
+            (field, valueData) =>
+              (field.Name, Value: valueData == ""
                 ? field.Value
                 : field.Value switch
                 {
                   int _ => int.Parse(valueData),
                   bool _ => bool.Parse(valueData),
-                  { } x => throw new InvalidOperationException($"Unexpected FormatConfig field '{x}'")
+                  { } x => throw new InvalidOperationException($"Unexpected FormatConfig field {field.Name} = '{x}'")
                 }))
           .ToDictionary(x => x.Name, x => x.Value);
 
@@ -80,21 +80,5 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
 
       return FSharpValue.MakeRecord(FormatConfigType, formatConfigValues, null) as FormatConfig;
     }
-
-    /*private FormatConfig Convert(RdFantomasFormatConfig config) =>
-      new FormatConfig(config.IndentSize, config.MaxLineLength, config.SemicolonAtEndOfLine,
-        config.SpaceBeforeParameter, config.SpaceBeforeLowercaseInvocation, config.SpaceBeforeUppercaseInvocation,
-        config.SpaceBeforeClassConstructor, config.SpaceBeforeMember, config.SpaceBeforeColon, config.SpaceAfterComma,
-        config.SpaceBeforeSemicolon, config.SpaceAfterSemicolon, config.IndentOnTryWith, config.SpaceAroundDelimiter,
-        config.MaxIfThenElseShortWidth, config.MaxInfixOperatorExpression, config.MaxRecordWidth,
-        DefaultFormatConfig.MaxRecordNumberOfItems, DefaultFormatConfig.RecordMultilineFormatter,
-        config.MaxArrayOrListWidth, DefaultFormatConfig.MaxArrayOrListNumberOfItems,
-        DefaultFormatConfig.ArrayOrListMultilineFormatter, config.MaxValueBindingWidth,
-        config.MaxFunctionBindingWidth, DefaultFormatConfig.MaxDotGetExpressionWidth,
-        config.MultilineBlockBracketsOnSameColumn, config.NewlineBetweenTypeDefinitionAndMembers,
-        config.KeepIfThenInSameLine, config.MaxElmishWidth, config.SingleArgumentWebMode,
-        config.AlignFunctionSignatureToIndentation, config.AlternativeLongMemberDefinitions,
-        DefaultFormatConfig.MultiLineLambdaClosingNewline, DefaultFormatConfig.DisableElmishSyntax,
-        DefaultFormatConfig.EndOfLine, DefaultFormatConfig.StrictMode);*/
   }
 }

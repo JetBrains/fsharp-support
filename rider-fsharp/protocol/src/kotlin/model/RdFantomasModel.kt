@@ -24,36 +24,6 @@ object RdFantomasModel : Root() {
         field("endCol", int)
     }
 
-    private val rdFantomasFormatConfig = structdef {
-        field("indentSize", int)
-        field("maxLineLength", int)
-        field("spaceBeforeParameter", bool)
-        field("spaceBeforeLowercaseInvocation", bool)
-        field("spaceBeforeUppercaseInvocation", bool)
-        field("spaceBeforeClassConstructor", bool)
-        field("spaceBeforeMember", bool)
-        field("spaceBeforeColon", bool)
-        field("spaceAfterComma", bool)
-        field("spaceBeforeSemicolon", bool)
-        field("spaceAfterSemicolon", bool)
-        field("indentOnTryWith", bool)
-        field("spaceAroundDelimiter", bool)
-        field("maxIfThenElseShortWidth", int)
-        field("maxInfixOperatorExpression", int)
-        field("maxRecordWidth", int)
-        field("maxArrayOrListWidth", int)
-        field("maxValueBindingWidth", int)
-        field("maxFunctionBindingWidth", int)
-        field("multilineBlockBracketsOnSameColumn", bool)
-        field("newlineBetweenTypeDefinitionAndMembers", bool)
-        field("keepIfThenInSameLine", bool)
-        field("maxElmishWidth", int)
-        field("singleArgumentWebMode", bool)
-        field("alignFunctionSignatureToIndentation", bool)
-        field("alternativeLongMemberDefinitions", bool)
-        field("semicolonAtEndOfLine", bool)
-    }
-
     private val rdFormatArgs = basestruct {
         field("fileName", string)
         field("source", string)
