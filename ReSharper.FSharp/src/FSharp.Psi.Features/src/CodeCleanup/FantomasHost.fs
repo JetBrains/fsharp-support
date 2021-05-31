@@ -2,6 +2,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
 
 open FSharp.Compiler.CodeAnalysis
 open FSharp.Compiler.Text
+open JetBrains.Core
 open JetBrains.Lifetimes
 open JetBrains.ProjectModel
 open JetBrains.Rd.Tasks
@@ -11,15 +12,21 @@ open JetBrains.ReSharper.Plugins.FSharp.Fantomas.Protocol
 module internal Reflection =
     let formatSettingType = typeof<FSharpFormatSettingsKey>
 
-    let getFieldValue obj fieldName defaultValue =
+    let getFieldValue obj fieldName =
         let field = formatSettingType.GetField(fieldName)
-        if isNotNull field then field.GetValue(obj) else defaultValue
+        if isNotNull field then field.GetValue(obj) else null
 
 
 [<SolutionComponent>]
 type FantomasHost(solution: ISolution, fantomasFactory: FantomasProcessFactory) =
     let mutable connection: FantomasConnection = null
     let mutable formatConfigFields: string[] = [||]
+
+    let toEditorConfigName value =
+        value
+        |> Seq.map (fun c -> if Char.IsUpper(c) then $"_%s{c.ToString().ToLower()}" else c.ToString())
+        |> String.concat ""
+        |> sprintf "fsharp%s"
 
     let isConnectionAlive () =
         isNotNull connection && connection.IsActive
@@ -28,7 +35,7 @@ type FantomasHost(solution: ISolution, fantomasFactory: FantomasProcessFactory) 
         if isConnectionAlive () then () else
         let formatterHostLifetime = Lifetime.Define(solution.GetLifetime())
         connection <- fantomasFactory.Create(formatterHostLifetime.Lifetime).Run()
-        formatConfigFields <- connection.Execute(fun x -> connection.ProtocolModel.GetFormatConfigFields.Sync(JetBrains.Core.Unit.Instance))
+        formatConfigFields <- connection.Execute(fun x -> connection.ProtocolModel.GetFormatConfigFields.Sync(Unit.Instance))
 
     let convertRange (range: range) =
         RdFcsRange(range.FileName, range.StartLine, range.StartColumn, range.EndLine, range.EndColumn)
@@ -40,7 +47,11 @@ type FantomasHost(solution: ISolution, fantomasFactory: FantomasProcessFactory) 
                     | "IndentSize" -> "INDENT_SIZE"
                     | "MaxLineLength" -> "WRAP_LIMIT"
                     | x -> x
-            (Reflection.getFieldValue settings fieldName "").ToString() |]
+            let value = Reflection.getFieldValue settings fieldName
+            let value =
+                if isNull value then settings.FantomasSettings.TryGet(toEditorConfigName fieldName)
+                else value.ToString()
+            if isNull value then "" else value |]
 
     let convertParsingOptions (options: FSharpParsingOptions) =
         let lightSyntax = Option.toNullable options.LightSyntax

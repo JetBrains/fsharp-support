@@ -18,10 +18,8 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
     private readonly FantomasCodeFormatter myCodeFormatter;
     protected override string ProtocolName => "Fantomas Host";
 
-    public FantomasEndPoint() : base(FantomasProtocolConstants.PARENT_PROCESS_PID_ENV_VARIABLE)
-    {
+    public FantomasEndPoint() : base(FantomasProtocolConstants.PARENT_PROCESS_PID_ENV_VARIABLE) =>
       myCodeFormatter = new FantomasCodeFormatter();
-    }
 
     protected override RdSimpleDispatcher InitDispatcher(Lifetime lifetime, ILogger logger) =>
       new RdSimpleDispatcher(lifetime, logger);
@@ -42,7 +40,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
     }
 
     private static string[] GetFormatConfigFields(Unit _) =>
-      FantomasCodeFormatter.FormatConfigPrimitiveFields.Select(t => t.Name).ToArray();
+      FantomasCodeFormatter.EditorConfigFields.Select(t => t.Name).ToArray();
 
     private string FormatSelection(RdFormatSelectionArgs args) => myCodeFormatter.FormatSelection(args);
     private string FormatDocument(RdFormatDocumentArgs args) => myCodeFormatter.FormatDocument(args);

@@ -6,15 +6,10 @@ using FSharp.Compiler.SourceCodeServices;
 using JetBrains.ReSharper.Plugins.FSharp.Fantomas.Server;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Control;
-using Range = FSharp.Compiler.Range.range;
-using FSharp.Compiler.CodeAnalysis;
-using FSharp.Compiler.Diagnostics;
-using JetBrains.ReSharper.Plugins.FSharp.Fantomas.Server;
-using Microsoft.FSharp.Collections;
-using Microsoft.FSharp.Control;
 using Microsoft.FSharp.Reflection;
 using FormatConfig = Fantomas.FormatConfig.FormatConfig;
-using Range = FSharp.Compiler.Text.Range;
+using FSharpType = Microsoft.FSharp.Reflection.FSharpType;
+using Range = FSharp.Compiler.Range.range;
 
 namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
 {
@@ -33,7 +28,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
         .Zip(FSharpValue.GetRecordFields(DefaultFormatConfig, null), (name, value) => (name, value))
         .ToArray();
 
-    public static readonly (string Name, object Value)[] FormatConfigPrimitiveFields =
+    public static readonly (string Name, object Value)[] EditorConfigFields =
       FormatConfigFields.Where(t => t.Value is int || t.Value is bool).ToArray();
 
     public string FormatSelection(RdFormatSelectionArgs args) =>
@@ -60,7 +55,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Fantomas.Host
     private static FormatConfig Convert(string[] riderFormatConfigValues)
     {
       var riderFormatConfigDict =
-        FormatConfigPrimitiveFields
+        EditorConfigFields
           .Zip(riderFormatConfigValues,
             (field, valueData) =>
               (field.Name, Value: valueData == ""
