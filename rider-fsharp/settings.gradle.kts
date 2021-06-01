@@ -7,3 +7,4 @@ pluginManagement {
 rootProject.name = "rider-fsharp"
 
 include("protocol")
+include("rider-fantomas")

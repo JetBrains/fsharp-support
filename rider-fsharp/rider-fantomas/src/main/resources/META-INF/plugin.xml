@@ -1,0 +1,7 @@
+<idea-plugin>
+    <id>com.jetbrains.rider.fantomas</id>
+    <name>Fantomas</name>
+    <description>F# Fantomas code formatter plugin for JetBrains Rider.</description>
+    <vendor url="https://jetbrains.com">JetBrains</vendor>
+    <depends>com.intellij.modules.rider</depends>
+</idea-plugin>
