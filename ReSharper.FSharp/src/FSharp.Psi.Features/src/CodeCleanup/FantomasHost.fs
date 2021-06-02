@@ -8,6 +8,7 @@ open JetBrains.ProjectModel
 open JetBrains.Rd.Tasks
 open JetBrains.ReSharper.Plugins.FSharp.Fantomas.Client
 open JetBrains.ReSharper.Plugins.FSharp.Fantomas.Protocol
+open JetBrains.Util
 
 module internal Reflection =
     let formatSettingType = typeof<FSharpFormatSettingsKey>
@@ -22,11 +23,7 @@ type FantomasHost(solution: ISolution, fantomasFactory: FantomasProcessFactory) 
     let mutable connection: FantomasConnection = null
     let mutable formatConfigFields: string[] = [||]
 
-    let toEditorConfigName value =
-        value
-        |> Seq.map (fun c -> if Char.IsUpper(c) then $"_%s{c.ToString().ToLower()}" else c.ToString())
-        |> String.concat ""
-        |> sprintf "fsharp%s"
+    let toEditorConfigName name = $"fsharp_{StringUtil.MakeUnderscoreCaseName(name)}"
 
     let isConnectionAlive () =
         isNotNull connection && connection.IsActive

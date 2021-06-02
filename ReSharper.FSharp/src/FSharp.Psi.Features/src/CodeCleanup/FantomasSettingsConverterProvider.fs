@@ -24,11 +24,11 @@ type FantomasSettingsConverter(fantomasSettingsEntry: SettingsIndexedEntry) =
         true
 
     interface IEditorConfigConverter with
-        member val Category = "F#" with get, set
+        member val Category = EditorConfigConverter.ReSharperCategory with get, set
         member x.IsPropertySupported(property) = property.StartsWith(fSharpPrefix, StringComparison.Ordinal)
         member x.Convert(context) = run context null
         member x.ConvertAndCheck(context) = run context context
-        member x.ReverseConvert _ = failwith "Not implemented"
+        member x.ReverseConvert _ = true
 
 
 [<ShellComponent>]
