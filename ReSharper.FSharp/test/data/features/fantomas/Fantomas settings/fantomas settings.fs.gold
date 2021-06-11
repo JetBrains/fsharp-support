@@ -1,0 +1,5 @@
+﻿=== fsharp ===
+SpaceBeforeClassConstructor, default=False settings=False editorConfig=True
+=== fantomas ===
+fsharp_custom_setting, default= settings= editorConfig=123
+fsharp_space_before_class_constructor, default= settings= editorConfig=true
