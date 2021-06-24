@@ -108,6 +108,7 @@
     <Compile Include="src\Search\FSharpGeneratedElementsSearch.fs" />
     <Compile Include="src\Search\RecordCtorSearch.fs" />
     <Compile Include="src\ExtendSelection\FSharpExtendSelectionProvider.fs" />
+    <Compile Include="src\CodeCleanup\FantomasSettingsConverterProvider.fs" />
     <Compile Include="src\CodeCleanup\FantomasHost.fs" />
     <Compile Include="src\CodeCleanup\FSharpReformatCode.fs" />
     <Compile Include="src\CodeCleanup\OptimizeImports.fs" />

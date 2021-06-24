@@ -23,6 +23,7 @@
     <Compile Include="Service\FSharpCodeFormatterTest.fs" />
     <Compile Include="Service\FSharpAssemblyAutoOpenTest.fs" />
     <Compile Include="Service\ArgumentsOwnerTest.fs" />
+    <Compile Include="Service\FantomasEditorConfigTest.fs" />
     <Compile Include="Cache\CSharpResolveTest.fs" />
     <Compile Include="Cache\FSharpSymbolCacheTest.fs" />
     <Compile Include="Parsing\FSharpLexerTest.fs" />

@@ -157,5 +157,8 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
 
     [SettingsEntry(true, "Never outdent pipe operators")]
     public bool NeverOutdentPipeOperators;
+
+    [SettingsIndexedEntry("List of Fantomas settings")]
+    public readonly IIndexedEntry<string, string> FantomasSettings;
   }
 }
