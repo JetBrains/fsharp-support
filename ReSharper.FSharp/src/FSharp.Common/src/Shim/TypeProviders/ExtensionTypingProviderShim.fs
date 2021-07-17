@@ -8,6 +8,7 @@ open FSharp.Core.CompilerServices
 open JetBrains.Core
 open JetBrains.Lifetimes
 open JetBrains.ProjectModel
+open JetBrains.ReSharper.Plugins.FSharp.Checker
 open JetBrains.ReSharper.Plugins.FSharp.Settings
 open JetBrains.ReSharper.Plugins.FSharp.TypeProviders.Protocol
 open JetBrains.ReSharper.Plugins.FSharp.TypeProviders.Protocol.Exceptions
@@ -21,7 +22,7 @@ type IProxyExtensionTypingProvider =
 
 [<SolutionComponent>]
 type ExtensionTypingProviderShim(solution: ISolution, toolset: ISolutionToolset,
-        experimentalFeatures: FSharpExperimentalFeaturesProvider,
+        experimentalFeatures: FSharpExperimentalFeaturesProvider, fcsProjectProvider: FcsProjectProvider,
         typeProvidersLoadersFactory: TypeProvidersExternalProcessFactory) as this =
     let lifetime = solution.GetLifetime()
     let defaultShim = ExtensionTypingProvider
@@ -56,6 +57,12 @@ type ExtensionTypingProviderShim(solution: ISolution, toolset: ISolutionToolset,
         toolset.Changed.Advise(lifetime, fun _ -> terminateConnection ())
         outOfProcess.Change.Advise(lifetime, fun enabled ->
             if enabled.HasNew && not enabled.New then terminateConnection ())
+
+        fcsProjectProvider.FcsProjectInvalidated.Advise(lifetime, fun psiModule ->
+            if isConnectionAlive () then
+                let project = psiModule.ContainingProjectModule.As<ProjectImpl>()
+                for projectInfo in project.OutputAssemblies.GetAllInfo() do
+                    typeProvidersManager.DisposeTypeProviders(projectInfo.OutputAssemblyInfo.Location.FullPath))
 
     interface IProxyExtensionTypingProvider with
         member this.InstantiateTypeProvidersOfAssembly(runTimeAssemblyFileName: string,
