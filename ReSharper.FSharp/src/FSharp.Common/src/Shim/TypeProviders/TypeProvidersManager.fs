@@ -52,6 +52,14 @@ type internal TypeProvidersCache() =
         if not hasValue then failwith $"Cannot get type provider {id} from TypeProvidersCache"
         else proxyTypeProvidersPerId.[id]
 
+    member x.Get(resolutionFolder) =
+        let providersData =
+            Seq.tryFind (fun (KeyValue((_, project), _)) -> project = resolutionFolder) typeProvidersPerAssembly
+
+        match providersData with
+        | Some x -> x.Value.Values
+        | None -> [||] :> _
+
     member x.Dump() =
         let typeProviders =
             proxyTypeProvidersPerId
@@ -74,6 +82,7 @@ type IProxyTypeProvidersManager =
         systemRuntimeAssemblyVersion: Version *
         compilerToolsPath: string list -> ITypeProvider list
 
+    abstract member DisposeTypeProviders: resolutionFolder: string -> unit
     abstract member Dump: unit -> string
 
 type TypeProvidersManager(connection: TypeProvidersConnection) =
@@ -90,7 +99,7 @@ type TypeProvidersManager(connection: TypeProvidersConnection) =
                 resolutionEnvironment: ResolutionEnvironment, isInvalidationSupported: bool, isInteractive: bool,
                 systemRuntimeContainsType: string -> bool, systemRuntimeAssemblyVersion: Version,
                 compilerToolsPath: string list) =
-            let envKey = $"{designTimeAssemblyNameString}+{resolutionEnvironment.resolutionFolder}"
+            let envKey = (designTimeAssemblyNameString, resolutionEnvironment.outputFile.Value)
 
             let result =
                 let fakeTcImports = getFakeTcImports systemRuntimeContainsType
@@ -114,6 +123,10 @@ type TypeProvidersManager(connection: TypeProvidersConnection) =
                      tp :> ITypeProvider ]
 
             typeProviderProxies
+
+        member this.DisposeTypeProviders(resolutionFolder) =
+            typeProviders.Get(resolutionFolder)
+            |> Seq.iter (fun x -> x.Dispose())
 
         member this.Dump() =
             $"{typeProviders.Dump()}\n\n{tpContext.Dump()}"
