@@ -59,7 +59,7 @@ type ExtensionTypingProviderShim(solution: ISolution, toolset: ISolutionToolset,
             if enabled.HasNew && not enabled.New then terminateConnection ())
 
         fcsProjectProvider.FcsProjectInvalidated.Advise(lifetime, fun psiModule ->
-            if isNotNull typeProvidersManager then
+            if isConnectionAlive () then
                 let project = psiModule.ContainingProjectModule.As<ProjectImpl>()
                 for projectInfo in project.OutputAssemblies.GetAllInfo() do
                     typeProvidersManager.DisposeTypeProviders(projectInfo.OutputAssemblyInfo.Location.FullPath))
