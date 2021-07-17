@@ -52,9 +52,9 @@ type internal TypeProvidersCache() =
         if not hasValue then failwith $"Cannot get type provider {id} from TypeProvidersCache"
         else proxyTypeProvidersPerId.[id]
 
-    member x.Get(resolutionFolder) =
+    member x.Get(assembly) =
         let providersData =
-            Seq.tryFind (fun (KeyValue((_, project), _)) -> project = resolutionFolder) typeProvidersPerAssembly
+            Seq.tryFind (fun (KeyValue((_, outputAssembly), _)) -> outputAssembly = assembly) typeProvidersPerAssembly
 
         match providersData with
         | Some x -> x.Value.Values
@@ -82,7 +82,7 @@ type IProxyTypeProvidersManager =
         systemRuntimeAssemblyVersion: Version *
         compilerToolsPath: string list -> ITypeProvider list
 
-    abstract member DisposeTypeProviders: resolutionFolder: string -> unit
+    abstract member DisposeTypeProviders: assembly: string -> unit
     abstract member Dump: unit -> string
 
 type TypeProvidersManager(connection: TypeProvidersConnection) =
@@ -124,8 +124,8 @@ type TypeProvidersManager(connection: TypeProvidersConnection) =
 
             typeProviderProxies
 
-        member this.DisposeTypeProviders(resolutionFolder) =
-            typeProviders.Get(resolutionFolder)
+        member this.DisposeTypeProviders(assembly) =
+            typeProviders.Get(assembly)
             |> Seq.iter (fun x -> x.Dispose())
 
         member this.Dump() =
